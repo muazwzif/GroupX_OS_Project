@@ -6,8 +6,7 @@
 #include <string.h>
 #include <limits.h>
 
-// STUDENT C (MIN/MAX)
-
+// STUDENT C 
 int32_t global_min = INT32_MAX;
 int32_t global_max = INT32_MIN;
 int threads_completed = 0;
@@ -58,9 +57,7 @@ void* find_min_max(void* arg) {
     if (threads_completed == total_threads) {
         pthread_cond_signal(&cond_var); 
     }
-    
     pthread_mutex_unlock(&lock);
-    
     pthread_exit(NULL);
 }
 
@@ -122,8 +119,7 @@ void execute_student_c_analytics(int32_t* array, size_t total_elements, int num_
 }
 
 
-// STUDENT D (MERGE SORT)
-
+// STUDENT D 
 pthread_mutex_t sort_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t merge_cond = PTHREAD_COND_INITIALIZER;
 
