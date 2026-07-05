@@ -178,14 +178,38 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    fseek(file, 0, SEEK_END);
+    if (fseek(file, 0, SEEK_END) != 0) {
+        perror("fseek");
+        fclose(file);
+        return 1;
+    }
     long filesize = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    int num_elements = filesize / sizeof(int32_t);
+    if (filesize < 0) {
+        perror("ftell");
+        fclose(file);
+        return 1;
+    }
+    if (fseek(file, 0, SEEK_SET) != 0) {
+        perror("fseek");
+        fclose(file);
+        return 1;
+    }
 
-    int32_t *array = malloc(filesize);
-    unsigned long elements_read = fread(array, sizeof(int32_t), num_elements, file);
-    (void)elements_read;
+    int num_elements = (int)(filesize / (long)sizeof(int32_t));
+    int32_t *array = malloc((size_t)num_elements * sizeof(int32_t));
+    if (!array) {
+        perror("malloc");
+        fclose(file);
+        return 1;
+    }
+
+    size_t elements_read = fread(array, sizeof(int32_t), (size_t)num_elements, file);
+    if (elements_read != (size_t)num_elements) {
+        fprintf(stderr, "Error: short read from %s (%zu/%d elements)\n", filename, elements_read, num_elements);
+        free(array);
+        fclose(file);
+        return 1;
+    }
     fclose(file);
 
     // Setup high-precision markers for timing analysis log requirement[cite: 1]
