@@ -148,8 +148,23 @@ int main(int argc, char *argv[]) {
 
     // Command-Line Interface Spec Handling[cite: 1]
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-t") == 0 && i + 1 < argc) num_threads = atoi(argv[++i]);
-        if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) filename = argv[++i];
+        if (strcmp(argv[i], "-t") == 0) {
+            if (i + 1 >= argc || argv[i + 1][0] == '-') {
+                fprintf(stderr, "Error: -t requires a positive integer thread count\n");
+                return 1;
+            }
+            num_threads = atoi(argv[++i]);
+            if (num_threads <= 0) {
+                fprintf(stderr, "Error: -t must be >= 1\n");
+                return 1;
+            }
+        } else if (strcmp(argv[i], "-f") == 0) {
+            if (i + 1 >= argc || argv[i + 1][0] == '-') {
+                fprintf(stderr, "Error: -f requires an input filename\n");
+                return 1;
+            }
+            filename = argv[++i];
+        }
     }
 
     if (!filename) {
