@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[STUDENT D] Running Sorted Verification Checks..."
+echo "Sorted Verification Checks..."
 echo "=================================================="
 
 if [ ! -f "result_sorted.dat" ]; then
@@ -35,9 +35,9 @@ except Exception as e:
 '
 
 if [ $? -eq 0 ]; then
-    echo "[SUCCESS] Student D Verification Passed Successfully."
+    echo "[SUCCESS] Verification Passed Successfully."
 else
-    echo "[FAIL] Student D Verification Found Ordering Anomalies."
+    echo "[FAIL] Verification Found Ordering Anomalies."
     exit 1
 fi
 =======
