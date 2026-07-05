@@ -90,7 +90,7 @@ void* worker_thread(void* arg) {
            tid, (unsigned long)pthread_self(), sched_getcpu(), start, end);
 
     /* -------------------------------------------------------------
-     * OWNED BY: Student C Nafiz
+     * OWNED BY: Student C (Nafiz)
      * DATA PARALLELISM: Find Minimum and Find Maximum
      * Each thread scans its local segment of the array.
      * ------------------------------------------------------------- */
@@ -113,7 +113,7 @@ void* worker_thread(void* arg) {
     pthread_mutex_unlock(&reduction_lock);
 
     /* -------------------------------------------------------------
-     * OWNED BY: Student D
+     * OWNED BY: Student D (Muaz)
      * DATA PARALLELISM: Sort individual blocks
      * Thread acquires the semaphore to limit concurrent sorting tasks.
      * ------------------------------------------------------------- */
@@ -129,7 +129,7 @@ void* worker_thread(void* arg) {
     pthread_mutex_unlock(&merge_lock);
 
     /* -------------------------------------------------------------
-     * OWNED BY: Student D Muaz
+     * OWNED BY: Student D
      * TASK PARALLELISM: Bottom-up merge sort phase
      * Concurrently merge adjacent blocks step-by-step.
      * Synchronization coordinated via condition variables.
