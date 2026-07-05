@@ -119,7 +119,7 @@ void run_parallel_analytics_sort(int32_t *array, int size, int total_threads) {
     for (int step = 1; step < total_threads; step++) {
         int left = 0;
         int mid = step * chunk_size - 1;
-        int right = (step + 1) * chunk_size - 1;
+        int right = (step == total_threads - 1) ? (size - 1) : ((step + 1) * chunk_size - 1);
         if (right >= size) right = size - 1;
         serial_merge(array, left, mid, right);
     }
