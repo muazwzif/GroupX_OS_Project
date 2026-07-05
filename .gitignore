@@ -1,0 +1,9 @@
+*.exe
+*.dat
+client
+generate_data
+operations
+page_simulator
+*.txt
+server
+verify
