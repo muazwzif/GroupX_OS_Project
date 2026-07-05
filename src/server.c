@@ -162,6 +162,15 @@ int main(int argc, char *argv[]) {
 
             printf("[Server Child %u] PID: %d executing on CPU Core: %d (Serving chunk %u/%u)\n", seq, getpid(), sched_getcpu(), seq, N);
 
+            // Re-open input file to get private file offset pointer (Student B bug fix)
+            close(file_fd);
+            file_fd = open(input_file, O_RDONLY);
+            if (file_fd < 0) {
+                perror("[Server Child] Failed to re-open input file");
+                close(conn_fd);
+                exit(1);
+            }
+
             // If not the first client, read the chunk request
             if (i > 0) {
                 chunk_request_t child_req;
@@ -188,6 +197,14 @@ int main(int argc, char *argv[]) {
                 payload_size = file_size - offset;
             }
 
+            // Seek to offset
+            if (lseek(file_fd, offset, SEEK_SET) < 0) {
+                perror("[Server Child] lseek failed");
+                close(conn_fd);
+                close(file_fd);
+                exit(1);
+            }
+
             // Read chunk data from file
             char *buf = malloc(payload_size);
             if (!buf) {
@@ -199,10 +216,10 @@ int main(int argc, char *argv[]) {
 
             size_t bytes_read = 0;
             while (bytes_read < payload_size) {
-                ssize_t r = pread(file_fd, buf + bytes_read, payload_size - bytes_read, offset + bytes_read);
+                ssize_t r = read(file_fd, buf + bytes_read, payload_size - bytes_read);
                 if (r < 0) {
                     if (errno == EINTR) continue;
-                    perror("[Server Child] pread file failed");
+                    perror("[Server Child] Read file failed");
                     free(buf);
                     close(conn_fd);
                     close(file_fd);
